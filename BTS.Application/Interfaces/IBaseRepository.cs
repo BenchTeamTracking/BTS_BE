@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BTS.Domain.Core.Interfaces
+namespace BTS.Application.Interfaces
 {
     public interface IBaseRepository<T> where T : class
     {

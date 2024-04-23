@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BTS.Domain.Core.Page
+namespace BTS.Domain.Page
 {
     public class Page
     {

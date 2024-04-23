@@ -1,5 +1,4 @@
-﻿using BTS.Domain.Core.User;
-using BTS.Infrastructure.Repositories;
+﻿using BTS.Application.Interfaces;
 using BTS_BE.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,10 +18,10 @@ namespace BTS_BE.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var result = _userRepository.GetItemByIdAsync(id);
-            return Ok();
+            var result = await _userRepository.GetItemByIdAsync(id);
+            return Ok(result);
         }
     }
 }

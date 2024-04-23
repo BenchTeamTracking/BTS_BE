@@ -1,0 +1,3 @@
+pipeline configuration guide: https://support.atlassian.com/bitbucket-cloud/docs/deploy-to-microsoft-azure/
+
+azure web apps deploy: https://bitbucket.org/product/features/pipelines/integrations?search=azure&p=atlassian/azure-web-apps-deploy

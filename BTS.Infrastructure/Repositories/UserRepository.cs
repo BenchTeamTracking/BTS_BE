@@ -1,4 +1,6 @@
-﻿using BTS.Domain.Core.User;
+﻿using BTS.Application.Interfaces;
+using BTS.Domain.User;
+using BTS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ namespace BTS.Infrastructure.Repositories
 
         public async Task<User> AddItemAsync(User item)
         {
-            var result = await _context.User.AddAsync(item);
+            var result = await _context.Users.AddAsync(item);
             return result.Entity;
         }
 
@@ -29,7 +31,7 @@ namespace BTS.Infrastructure.Repositories
 
         public async Task<User> GetItemByIdAsync(int Id)
         {
-            return await _context.User.FirstOrDefaultAsync(u => u.Id == Id) ?? new User();
+            return await _context.Users.FirstOrDefaultAsync(i => i.Id == Id) ?? new User();
         }
 
         public Task<IEnumerable<User>> GetItemsAsync()

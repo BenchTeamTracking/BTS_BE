@@ -11,12 +11,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<!--<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />-->
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BTS.Domain.Core\BTS.Domain.Core.csproj" />
+	  <ProjectReference Include="..\BTS.Application\BTS.Application.csproj" />
 	  <ProjectReference Include="..\BTS.Infrastructure\BTS.Infrastructure.csproj" />
 	</ItemGroup>
 

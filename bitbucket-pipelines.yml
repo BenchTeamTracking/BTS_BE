@@ -1,48 +1,54 @@
+
 #  Template .NET Core build
 #  This template allows you to validate your .NET Core package.
 #  The workflow allows running tests and code linting on the default branch.
 # To run your pipeline on a Windows machine, create a self-hosted Windows runner.
 # For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
-image: mcr.microsoft.com/dotnet/core/sdk:3.1
+image: mcr.microsoft.com/dotnet/sdk:8.0
 pipelines:
   default:
-    #- parallel:
-        - step:
-            name: Build and Test
-            deployment: Production
-            caches:
-              - dotnetcore
-            script:
-            - pipe: atlassian/azure-web-apps-deploy:1.1.1
-              variables:
-                AZURE_APP_ID: $AZURE_APP_ID
-                AZURE_PASSWORD: $AZURE_PASSWORD
-                AZURE_TENANT_ID: $AZURE_TENANT_ID
-                AZURE_RESOURCE_GROUP: 'SynergyProjectResource'
-                AZURE_APP_NAME: 'benchtrackingsystemapi'
-                ZIP_FILE: '<string>'
-                # SLOT: '<string>' # Optional.
-                # AZURE_CLOUD_ENVIRONMENT: '<string>' # Optional
-                # DEBUG: '<boolean>' # Optional.
-        - step:
-            name: Lint the code
-            caches:
-              - dotnetcore
-            script:
-              - pipe: atlassian/azure-cli-run:1.2.1
-                variables:
-                  AZURE_APP_ID: $AZURE_APP_ID
-                  AZURE_PASSWORD: $AZURE_PASSWORD
-                  AZURE_TENANT_ID: $AZURE_TENANT_ID
-                  CLI_COMMAND: 'az $CLI_COMMAND'
-                  # DEBUG: DEBUG # Optional
+    - step:
+        name: 'Package'
+        caches:
+          - dotnetcore
+        script:
+          # NOTE: zip isn't installed in the image, so we must manually add it
+          - apt-get update
+          - apt-get install zip -y
+          # Build all
+          - dotnet build BTS-BE/BTS-BE.sln
+          # publish & zip
+          - dotnet publish BTS-BE/BTS-BE.sln -c Debug -o ./publish
+          - cd ./publish
+          - zip -r btsapi.zip .
+        artifacts:
+          - 'publish/btsapi.zip'
+          
+    - step:
+        name: Build and Test
+        deployment: Staging
+        caches:
+          - dotnetcore
+        script:
+        - pipe: atlassian/azure-web-apps-deploy:1.1.1
+          variables:
+            AZURE_APP_ID: $AZURE_APP_ID
+            AZURE_PASSWORD: $AZURE_PASSWORD
+            AZURE_TENANT_ID: $AZURE_TENANT_ID
+            AZURE_RESOURCE_GROUP: $AZURE_RESOURCE_GROUP
+            AZURE_APP_NAME: $AZURE_APP_NAME
+            ZIP_FILE: 'publish/btsapi.zip'
+            DEBUG: 'true'
             
-              #- export SOLUTION_NAME=HelloProject
-              #- export REPORTS_PATH=linter-reports
-              #- dotnet new tool-manifest
-              #- dotnet tool install JetBrains.ReSharper.GlobalTools
-              #- dotnet tool restore
-              #- dotnet jb inspectcode ${SOLUTION_NAME}.sln --output="${REPORTS_PATH}/jb-${BITBUCKET_BUILD_NUMBER}.xml"
-            artifacts:
-              - linter-reports/**
+    - step:
+        name: Run Migrations
+        script:
+          - pipe: atlassian/azure-cli-run:1.2.1
+            variables:
+              AZURE_APP_ID: $AZURE_APP_ID
+              AZURE_PASSWORD: $AZURE_PASSWORD
+              AZURE_TENANT_ID: $AZURE_TENANT_ID
+              CLI_COMMAND: 'bash cli_pipeline.sh'
+              DEBUG: 'true'
+
 

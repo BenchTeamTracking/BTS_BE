@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BTS.Domain.Core.User
+namespace BTS.Domain.User
 {
     public class User
     {
         [Key]
         public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

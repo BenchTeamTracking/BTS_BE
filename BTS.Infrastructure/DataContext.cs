@@ -1,4 +1,4 @@
-﻿using BTS.Domain.Core.User;
+﻿using BTS.Domain.User;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,6 @@ namespace BTS.Infrastructure
         {
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
