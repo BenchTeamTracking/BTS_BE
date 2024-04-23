@@ -24,7 +24,7 @@ namespace BTS.Infrastructure.Repositories
             return result.Entity;
         }
 
-        public Task<bool> DeleteItemByIdAsync(int Id)
+        public async Task<bool> DeleteItemByIdAsync(int Id)
         {
             throw new NotImplementedException();
         }
